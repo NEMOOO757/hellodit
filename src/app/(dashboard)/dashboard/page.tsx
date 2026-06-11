@@ -12,10 +12,10 @@ import { t } from '@/lib/i18n';
 import { motion } from 'motion/react';
 
 // Dynamic imports for heavy components
-const Hero3D = dynamic(() => import('@/components/dashboard/hero-3d'), { 
-  ssr: false,
-  loading: () => <ShimmerSkeleton variant="card" className="h-[280px]" />
-});
+// const Hero3D = dynamic(() => import('@/components/dashboard/hero-3d'), { 
+//  ssr: false,
+//  loading: () => <ShimmerSkeleton variant="card" className="h-[280px]" />
+// });
 
 const MetricCard = dynamic(() => import('@/components/dashboard/metric-card').then(mod => mod.MetricCard), {
   loading: () => <ShimmerSkeleton variant="card" className="h-[140px]" />
