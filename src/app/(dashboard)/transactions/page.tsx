@@ -1,153 +1,78 @@
 "use client";
 import React, { useState } from 'react';
 
-// DICTIONARY AUTO-CORRECT PIPELINE DATA
-const autoCorrectMap: Record<string, string> = {
-  "svr": "INFRASTRUCTURE",
-  "serv": "INFRASTRUCTURE",
-  "web": "INFRASTRUCTURE",
-  "host": "INFRASTRUCTURE",
-  "mio": "HOBBY_ENG",
-  "mot": "HOBBY_ENG",
-  "eng": "HOBBY_ENG",
-  "hby": "HOBBY_ENG",
-  "inc": "INCOME_PROJ",
-  "duit": "INCOME_PROJ",
-  "pro": "INCOME_PROJ"
+const autoCorrectDictionary: Record<string, string> = {
+  "mio": "HOBBY_ENGINE", "mot": "HOBBY_ENGINE", "eng": "HOBBY_ENGINE", "bore": "HOBBY_ENGINE",
+  "svr": "INFRASTRUCTURE", "host": "INFRASTRUCTURE", "vrc": "INFRASTRUCTURE", "dom": "INFRASTRUCTURE",
+  "pro": "INCOME_PROJECT", "csh": "INCOME_PROJECT", "jasa": "INCOME_PROJECT"
 };
 
 export default function TransactionsPage() {
-  const [searchQuery, setSearchQuery] = useState('');
-  const [correctedWord, setCorrectedWord] = useState('');
-  const [lang, setLang] = useState<'ID' | 'EN'>('ID');
-  const [currency, setCurrency] = useState<'IDR' | 'USD'>('IDR');
-  
-  const exchangeRate = 16200;
+  const [query, setQuery] = useState('');
+  const [corrected, setCorrected] = useState('');
 
-  const rawTransactions = [
-    { id: 1, date: '2026-06-12', time: '14:32', desc: 'Sewa Hosting Vercel Pro', category: 'INFRASTRUCTURE', type: 'outcome', amount: 150000 },
-    { id: 2, date: '2026-06-11', time: '09:15', desc: 'Project Jasa Development Website', category: 'INCOME_PROJ', type: 'income', amount: 2500000 },
-    { id: 3, date: '2026-06-10', time: '19:40', desc: 'Beli Suku Cadang Mio 59mm Kawahara', category: 'HOBBY_ENG', type: 'outcome', amount: 450000 },
-    { id: 4, date: '2026-06-08', time: '11:20', desc: 'Sewa Domain Premium App', category: 'INFRASTRUCTURE', type: 'outcome', amount: 600000 },
+  const rawData = [
+    { id: "TX-9082", date: '2026-06-12', time: '14:32:01', desc: 'Sewa Hosting Vercel Edge Pro Node Tier-3', cat: 'INFRASTRUCTURE', type: 'out', amt: 150000 },
+    { id: "TX-9081", date: '2026-06-11', time: '09:15:44', desc: 'Project Jasa API Development Architecture Deployment', cat: 'INCOME_PROJECT', type: 'in', amt: 2500000 },
+    { id: "TX-9080", date: '2026-06-10', time: '19:40:12', desc: 'Suku Cadang Blok Mio 59mm Kawahara Racing Bore Up Kit', cat: 'HOBBY_ENGINE', type: 'out', amt: 450000 },
+    { id: "TX-9079", date: '2026-06-08', time: '11:20:55', desc: 'Registrasi Domain Premium Top Level Matrix Engine Extension', cat: 'INFRASTRUCTURE', type: 'out', amt: 600000 },
+    { id: "TX-9078", date: '2026-06-05', time: '16:02:11', desc: 'Maintenance Paket Repository Server Distributed AWS Node', cat: 'INFRASTRUCTURE', type: 'out', amt: 350000 },
+    { id: "TX-9077", date: '2026-06-02', time: '08:11:30', desc: 'Beli Noken As Custom Mio Stroke Up Kawahara Performance', cat: 'HOBBY_ENGINE', type: 'out', amt: 280000 },
   ];
 
-  // REAL-TIME AUTO CORRECT SEARCH HANDLER ENGINE
-  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const val = e.target.value;
-    setSearchQuery(val);
-
-    const cleanInput = val.toLowerCase().trim();
-    if (autoCorrectMap[cleanInput]) {
-      setCorrectedWord(autoCorrectMap[cleanInput]);
-    } else {
-      setCorrectedWord('');
-    }
+  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const val = e.target.value; setQuery(val);
+    const clean = val.toLowerCase().trim();
+    if (autoCorrectDictionary[clean]) setCorrected(autoCorrectDictionary[clean]);
+    else setCorrected('');
   };
 
-  // FILTER LOGIC COMBINED WITH AUTO-CORRECT PIPELINE
-  const filteredTransactions = rawTransactions.filter(t => {
-    const filterKey = correctedWord || searchQuery;
-    if (!filterKey) return true;
-    
-    return (
-      t.desc.toLowerCase().includes(filterKey.toLowerCase()) ||
-      t.category.toLowerCase().includes(filterKey.toLowerCase())
-    );
+  const filtered = rawData.filter(t => {
+    const target = corrected || query; if (!target) return true;
+    return t.desc.toLowerCase().includes(target.toLowerCase()) || t.cat.toLowerCase().includes(target.toLowerCase());
   });
 
-  const formatValue = (valInIDR: number) => {
-    if (currency === 'USD') {
-      return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 2 }).format(valInIDR / exchangeRate);
-    }
-    return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(valInIDR);
-  };
-
   return (
-    <div className="pt-24 p-6 font-sans tracking-tight max-w-7xl mx-auto space-y-6">
+    <div className="pt-20 p-6 bg-[#02040a] min-h-screen text-slate-300 font-mono tracking-tight max-w-7xl mx-auto space-y-6">
+      <style dangerouslySetInnerHTML={{__html: `#global-header-greeting, header p, .header-greet { display: none !important; }`}} />
       
-      {/* SWITCHER PANEL CONTROLLER */}
-      <div className="flex justify-end items-center gap-3 bg-slate-900/50 p-2 rounded-xl border border-slate-800 w-max ml-auto">
-        <div className="flex rounded-md overflow-hidden border border-slate-700 bg-slate-950 p-0.5 text-[10px] font-bold font-mono">
-          <button onClick={() => setLang('ID')} className={`px-2 py-1 rounded transition-all ${lang === 'ID' ? 'bg-indigo-600 text-white' : 'text-slate-400'}`}>ID</button>
-          <button onClick={() => setLang('EN')} className={`px-2 py-1 rounded transition-all ${lang === 'EN' ? 'bg-indigo-600 text-white' : 'text-slate-400'}`}>EN</button>
-        </div>
-        <div className="flex rounded-md overflow-hidden border border-slate-700 bg-slate-950 p-0.5 text-[10px] font-bold font-mono">
-          <button onClick={() => setCurrency('IDR')} className={`px-2 py-1 rounded transition-all ${currency === 'IDR' ? 'bg-emerald-600 text-white' : 'text-slate-400'}`}>IDR</button>
-          <button onClick={() => setCurrency('USD')} className={`px-2 py-1 rounded transition-all ${currency === 'USD' ? 'bg-emerald-600 text-white' : 'text-slate-400'}`}>USD</button>
-        </div>
-      </div>
-
-      {/* HEADER SECTION */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div className="flex flex-col md:flex-row justify-between md:items-center gap-4 border-b border-white/[0.03] pb-4">
         <div>
-          <h1 className="text-2xl font-extrabold text-slate-900 tracking-tighter">
-            {lang === 'ID' ? 'Ledger Riwayat Transaksi' : 'Ledger Order History'}
-          </h1>
-          <p className="text-sm text-slate-500 font-medium">
-            {lang === 'ID' ? 'Sistem pencatatan mutasi volume finansial.' : 'Precise financial volume tracking system.'}
-          </p>
+          <h1 className="text-sm font-black text-white tracking-widest uppercase">QUANT LEDGER JOURNAL</h1>
+          <p className="text-[10px] text-slate-500 mt-0.5">High-capacity cryptographic transaction logging system file stream.</p>
         </div>
       </div>
 
-      {/* SMART SEARCH ROW WITH REAL-TIME AUTO CORRECT ALERT */}
-      <div className="space-y-2">
-        <div className="relative">
-          <input
-            type="text"
-            value={searchQuery}
-            onChange={handleSearchChange}
-            placeholder={lang === 'ID' ? "Ketik kata kunci pencarian (ex: mio, svr, host)..." : "Type keywords to search..."}
-            className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-sm font-mono text-slate-200 focus:outline-none focus:border-indigo-500 transition shadow-inner"
-          />
-          {correctedWord && (
-            <span className="absolute right-4 top-1/2 -translate-y-1/2 text-[10px] font-bold font-mono bg-indigo-500/20 text-indigo-400 px-2 py-1 rounded border border-indigo-500/30">
-              Auto-Correct Route: {correctedWord} ⚡
-            </span>
-          )}
-        </div>
-        {correctedWord && (
-          <p className="text-[11px] font-medium text-indigo-500 pl-1">
-            * {lang === 'ID' ? `Mendeteksi kata kunci alternatif. Menampilkan kategori: ${correctedWord}` : `Alternative keyword routed to filter category: ${correctedWord}`}
-          </p>
-        )}
+      <div className="relative">
+        <input type="text" value={query} onChange={handleSearch} placeholder="EXEC_FILTER_ROUTE [KEYWORDS: mio, vrc, eng, pro]..." className="w-full bg-[#090d16] border border-white/[0.05] rounded-xl px-4 py-3.5 text-xs font-mono text-slate-200 focus:outline-none focus:border-emerald-500 shadow-2xl" />
+        {corrected && <span className="absolute right-4 top-1/2 -translate-y-1/2 text-[9px] font-black tracking-widest bg-emerald-500/10 text-emerald-400 px-2 py-1 rounded border border-emerald-500/20">ROUTING HIT: {corrected}</span>}
       </div>
 
-      {/* MATRIX QUANT ORDERBOOK TABLE */}
-      <div className="bg-slate-950 rounded-xl shadow-2xl overflow-hidden border border-slate-800">
-        <table className="w-full text-left border-collapse">
-          <thead>
-            <tr className="bg-slate-900 border-b border-slate-800 text-slate-400 text-xs font-bold uppercase tracking-wider">
-              <th className="p-4">Timestamp</th>
-              <th className="p-4">{lang === 'ID' ? 'Deskripsi Aset' : 'Asset Description'}</th>
-              <th className="p-4">Tag Block</th>
-              <th className="p-4 text-right">Volume</th>
-            </tr>
-          </thead>
-          <tbody className="text-sm font-mono text-slate-300">
-            {filteredTransactions.length > 0 ? (
-              filteredTransactions.map((t) => (
-                <tr key={t.id} className="border-b border-slate-900/60 hover:bg-slate-900/40 transition">
-                  <td className="p-4 text-slate-500 text-xs">{t.date} <span className="text-slate-600 font-normal">{t.time}</span></td>
-                  <td className="p-4 font-sans font-bold text-slate-200 tracking-tight">{t.desc}</td>
-                  <td className="p-4">
-                    <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-slate-800 text-slate-400 border border-slate-700">
-                      {t.category}
-                    </span>
-                  </td>
-                  <td className={`p-4 text-right font-bold text-base ${t.type === 'income' ? 'text-emerald-400' : 'text-rose-400'}`}>
-                    {t.type === 'income' ? '▲' : '▼'} {formatValue(t.amount)}
-                  </td>
-                </tr>
-              ))
-            ) : (
-              <tr>
-                <td colSpan={4} className="p-8 text-center text-slate-600 font-mono text-xs">
-                  [EMPTY NODE] No matching data found.
-                </td>
+      <div className="bg-[#090d16] rounded-xl shadow-2xl overflow-hidden border border-white/[0.04]">
+        <div className="overflow-x-auto">
+          <table className="w-full text-left border-collapse text-xs">
+            <thead>
+              <tr className="bg-[#0e1422] border-b border-white/[0.04] text-slate-400 font-bold tracking-wider text-[10px] uppercase">
+                <th className="p-4">TX_HASH_ID</th>
+                <th className="p-4">TIMESTAMP_NODE</th>
+                <th className="p-4">ASSET_DESCRIPTION</th>
+                <th className="p-4">BLOCK_TAG</th>
+                <th className="p-4 text-right">VOLUME_LIQUID</th>
               </tr>
-            )}
-          </tbody>
-        </table>
+            </thead>
+            <tbody className="text-slate-300 divide-y divide-white/[0.02]">
+              {filtered.map((t) => (
+                <tr key={t.id} className="hover:bg-white/[0.01] transition-all">
+                  <td className="p-4 text-indigo-400 font-bold">{t.id}</td>
+                  <td className="p-4 text-slate-500 text-[11px]">{t.date} <span className="text-slate-700">{t.time}</span></td>
+                  <td className="p-4 font-sans font-bold text-slate-200 tracking-tight text-sm">{t.desc}</td>
+                  <td className="p-4"><span className="px-2 py-0.5 rounded text-[9px] font-black bg-[#02040a] text-slate-400 border border-white/[0.05]">{t.cat}</span></td>
+                  <td className={`p-4 text-right font-bold font-mono text-sm ${t.type === 'in' ? 'text-emerald-400' : 'text-rose-400'}`}>{t.type === 'in' ? '▲' : '▼'} Rp {t.amt.toLocaleString('id-ID')}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   );

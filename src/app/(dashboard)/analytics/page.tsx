@@ -3,34 +3,30 @@ import React from 'react';
 
 export default function AnalyticsPage() {
   return (
-    <div className="pt-24 p-6 font-sans tracking-tight max-w-7xl mx-auto space-y-6">
-      <div>
-        <h1 className="text-2xl font-extrabold text-slate-900 tracking-tighter">Performance Analytics</h1>
-        <p className="text-sm text-slate-500 font-medium">Matriks data analitik dan grafik pertumbuhan ekuitas bersih.</p>
+    <div className="pt-20 p-6 bg-[#02040a] min-h-screen text-slate-300 font-mono tracking-tight max-w-7xl mx-auto space-y-6">
+      <style dangerouslySetInnerHTML={{__html: `#global-header-greeting, header p, .header-greet { display: none !important; }`}} />
+      <div className="border-b border-white/[0.03] pb-4">
+        <h1 className="text-sm font-black text-white tracking-widest uppercase">HIGH-FREQUENCY ANALYTICS COMPILER</h1>
+        <p className="text-[10px] text-slate-500 mt-0.5">Statistical packet distributions and historical ledger asset growth scales.</p>
       </div>
 
-      <div className="bg-slate-950 p-6 rounded-xl border border-slate-800 shadow-xl">
-        <h3 className="text-xs font-bold text-slate-400 uppercase tracking-wider font-mono mb-6">Equity Growth Scale (Harian)</h3>
-        {/* Histogram Simulator */}
-        <div className="h-64 flex items-end gap-3 px-4 border-b border-slate-800 pb-2">
-          <div className="w-full bg-indigo-500 h-[20%] rounded-t-sm relative group">
-            <span className="absolute -top-7 left-1/2 -translate-x-1/2 text-[10px] font-mono bg-slate-800 text-white p-1 rounded opacity-0 group-hover:opacity-100 transition">20%</span>
-          </div>
-          <div className="w-full bg-indigo-500 h-[45%] rounded-t-sm relative group">
-            <span className="absolute -top-7 left-1/2 -translate-x-1/2 text-[10px] font-mono bg-slate-800 text-white p-1 rounded opacity-0 group-hover:opacity-100 transition">45%</span>
-          </div>
-          <div className="w-full bg-indigo-500 h-[35%] rounded-t-sm relative group">
-            <span className="absolute -top-7 left-1/2 -translate-x-1/2 text-[10px] font-mono bg-slate-800 text-white p-1 rounded opacity-0 group-hover:opacity-100 transition">35%</span>
-          </div>
-          <div className="w-full bg-emerald-500 h-[75%] rounded-t-sm relative group">
-            <span className="absolute -top-7 left-1/2 -translate-x-1/2 text-[10px] font-mono bg-slate-800 text-white p-1 rounded opacity-0 group-hover:opacity-100 transition">75%</span>
-          </div>
-          <div className="w-full bg-emerald-500 h-[90%] rounded-t-sm relative group">
-            <span className="absolute -top-7 left-1/2 -translate-x-1/2 text-[10px] font-mono bg-slate-800 text-white p-1 rounded opacity-0 group-hover:opacity-100 transition">90%</span>
-          </div>
+      <div className="bg-[#090d16] p-6 rounded-xl border border-white/[0.04] shadow-2xl space-y-6">
+        <div className="flex justify-between items-center border-b border-white/[0.02] pb-4">
+          <h3 className="text-[11px] font-bold text-slate-400 uppercase tracking-widest">EQUITY BATCH HISTOGRAM VECTOR MATRIX</h3>
+          <span className="text-[9px] font-black text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20">[BUFFER_RATE: 0.02ms]</span>
         </div>
-        <div className="flex justify-between text-[10px] text-slate-500 font-mono mt-2 px-1">
-          <span>MON</span><span>TUE</span><span>WED</span><span>THU</span><span>FRI (TODAY)</span>
+
+        {/* HIGH QUALITY ENGINE BAR TRADING CHART */}
+        <div className="h-64 flex items-end gap-3 px-4 border-b border-white/[0.05] pb-2 relative">
+          <div className="w-full bg-[#02040a] border border-white/[0.05] h-[20%] rounded-t hover:border-emerald-500/40 transition-all duration-300"></div>
+          <div className="w-full bg-[#02040a] border border-white/[0.05] h-[55%] rounded-t hover:border-emerald-500/40 transition-all duration-300"></div>
+          <div className="w-full bg-[#02040a] border border-white/[0.05] h-[35%] rounded-t hover:border-emerald-500/40 transition-all duration-300"></div>
+          <div className="w-full bg-gradient-to-t from-indigo-500/10 to-indigo-500/30 border border-indigo-500/40 h-[70%] rounded-t relative"></div>
+          <div className="w-full bg-gradient-to-t from-emerald-500/10 to-emerald-500/30 border border-emerald-400 h-[95%] rounded-t relative"></div>
+          <div className="w-full bg-gradient-to-t from-emerald-500/10 to-emerald-500/30 border border-emerald-500/40 h-[85%] rounded-t relative"></div>
+        </div>
+        <div className="flex justify-between text-[9px] text-slate-600 font-bold px-2 tracking-widest">
+          <span>PIPELINE_NODE_01</span><span>PIPELINE_NODE_02</span><span>PIPELINE_NODE_03</span><span>PIPELINE_NODE_04</span><span>PIPELINE_NODE_05</span><span>CURRENT_ACTIVE_BLOCK</span>
         </div>
       </div>
     </div>

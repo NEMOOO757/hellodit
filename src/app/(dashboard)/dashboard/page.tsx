@@ -1,178 +1,144 @@
 "use client";
 import React, { useState, useEffect, useRef } from 'react';
 
-// ==========================================
-// 1. ENGINE EFEK 3D PARTIKEL SIBER (SAFE MOUNT)
-// ==========================================
-function CyberHero3D() {
+function QuantumWave3D() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-
   useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
-
-    let animationFrameId: number;
-    let width = (canvas.width = canvas.offsetWidth);
-    let height = (canvas.height = canvas.offsetHeight);
-
-    const particles: Array<{ x: number; y: number; r: number; dx: number; dy: number }> = [];
-    for (let i = 0; i < 40; i++) {
-      particles.push({
-        x: Math.random() * width,
-        y: Math.random() * height,
-        r: Math.random() * 2 + 1,
-        dx: (Math.random() - 0.5) * 0.8,
-        dy: (Math.random() - 0.5) * 0.8,
-      });
-    }
-
-    const animate = () => {
-      ctx.clearRect(0, 0, width, height);
-      ctx.fillStyle = 'rgba(99, 102, 241, 0.15)';
-      ctx.strokeStyle = 'rgba(99, 102, 241, 0.05)';
-
-      particles.forEach((p, idx) => {
-        p.x += p.dx;
-        p.y += p.dy;
-        if (p.x < 0 || p.x > width) p.dx *= -1;
-        if (p.y < 0 || p.y > height) p.dy *= -1;
-
+    const canvas = canvasRef.current; if (!canvas) return;
+    const ctx = canvas.getContext('2d'); if (!ctx) return;
+    let id: number; let w = (canvas.width = canvas.offsetWidth); let h = (canvas.height = canvas.offsetHeight);
+    let phase = 0;
+    const draw = () => {
+      ctx.clearRect(0,0,w,h); ctx.strokeStyle = 'rgba(16, 185, 129, 0.15)'; ctx.lineWidth = 1;
+      const rows = 12; const cols = 25; const gapX = w / cols; const gapY = h / rows;
+      for (let i = 0; i < rows; i++) {
         ctx.beginPath();
-        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-        ctx.fill();
-
-        for (let j = idx + 1; j < particles.length; j++) {
-          const p2 = particles[j];
-          const dist = Math.hypot(p.x - p2.x, p.y - p2.y);
-          if (dist < 70) {
-            ctx.beginPath();
-            ctx.moveTo(p.x, p.y);
-            ctx.lineTo(p2.x, p2.y);
-            ctx.stroke();
-          }
+        for (let j = 0; j <= cols; j++) {
+          const x = j * gapX;
+          const distort = Math.sin(j * 0.3 + phase) * Math.cos(i * 0.4 + phase) * 20;
+          const y = i * gapY + distort + 30;
+          if (j === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
         }
-      });
-      animationFrameId = requestAnimationFrame(animate);
+        ctx.stroke();
+      }
+      phase += 0.02; id = requestAnimationFrame(draw);
     };
-
-    animate();
-    const handleResize = () => {
-      if (!canvas) return;
-      width = canvas.width = canvas.offsetWidth;
-      height = canvas.height = canvas.offsetHeight;
-    };
-    window.addEventListener('resize', handleResize);
-
-    return () => {
-      cancelAnimationFrame(animationFrameId);
-      window.removeEventListener('resize', handleResize);
-    };
+    draw();
+    const resize = () => { if(canvas) { w = canvas.width = canvas.offsetWidth; h = canvas.height = canvas.offsetHeight; } };
+    window.addEventListener('resize', resize); return () => { cancelAnimationFrame(id); window.removeEventListener('resize', resize); };
   }, []);
-
   return (
-    <div className="relative w-full h-[180px] bg-slate-950 rounded-2xl overflow-hidden border border-indigo-500/30 shadow-2xl">
+    <div className="relative w-full h-[260px] bg-[#02040a] rounded-xl overflow-hidden border border-white/[0.05] shadow-2xl">
       <canvas ref={canvasRef} className="absolute inset-0 w-full h-full pointer-events-none" />
-      <div className="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-950/80 to-transparent p-6 flex flex-col justify-center z-10">
-        <span className="text-[10px] font-mono font-bold tracking-widest text-indigo-400 uppercase border border-indigo-500/30 px-2 py-0.5 rounded w-max mb-2 animate-pulse">
-          3D Cyber Matrix Active
-        </span>
-        <h2 className="text-2xl font-black text-white tracking-tighter md:text-3xl">
-          HELLODIT QUANT INFRASTRUCTURE
-        </h2>
-        <p className="text-slate-400 text-xs mt-1 font-medium max-w-md">
-          High-frequency data node ledger tracking system. Safe environment, 0% Hydration Leak.
-        </p>
+      <div className="absolute inset-0 bg-gradient-to-t from-[#02040a] via-transparent to-transparent p-8 flex flex-col justify-end">
+        <div className="flex items-center gap-2 mb-2">
+          <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-ping" />
+          <span className="text-[10px] font-mono font-black text-emerald-400 uppercase tracking-widest bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20">QUANTUM WAVE MATRIX ACTIVE</span>
+        </div>
+        <h1 className="text-3xl font-black text-white tracking-tighter uppercase font-mono">HELLODIT CORE TERMINAL</h1>
+        <p className="text-slate-500 font-mono text-xs mt-1 max-w-2xl leading-relaxed">High-performance decentralised financial logging infrastructure. Engineered with mathematical vector grids for multi-channel asset verification and edge packet storage caching.</p>
       </div>
     </div>
   );
 }
 
-// ==========================================
-// 2. CORE DASHBOARD ENGINE WITH MULTI-LANG & CURRENCY
-// ==========================================
 export default function DashboardPage() {
-  const [mounted, setMounted] = useState(false);
-  const [lang, setLang] = useState<'ID' | 'EN'>('ID');
-  const [currency, setCurrency] = useState<'IDR' | 'USD'>('IDR');
-
-  // Kurs Dolar Dummy Konversi Instan
-  const exchangeRate = 16200; 
+  const [chartData, setChartData] = useState([
+    { h: 70, l: 30, o: 60, c: 45, v: 80, isUp: false },
+    { h: 85, l: 40, o: 45, c: 75, v: 120, isUp: true },
+    { h: 90, l: 50, o: 75, c: 60, v: 95, isUp: false },
+    { h: 65, l: 20, o: 60, c: 35, v: 60, isUp: false },
+    { h: 95, l: 30, o: 35, c: 80, v: 150, isUp: true }
+  ]);
 
   useEffect(() => {
-    setMounted(true);
+    const interval = setInterval(() => {
+      setChartData(prev => {
+        const next = [...prev.slice(1)];
+        const last = prev[prev.length - 1];
+        const change = (Math.random() - 0.5) * 20;
+        const newC = Math.max(20, Math.min(95, last.c + change));
+        const newO = last.c;
+        const isUp = newC >= newO;
+        next.push({
+          h: Math.max(newC, newO) + Math.random() * 10,
+          l: Math.min(newC, newO) - Math.random() * 10,
+          o: newO,
+          c: newC,
+          v: Math.floor(Math.random() * 100) + 50,
+          isUp
+        });
+        return next;
+      });
+    }, 3000);
+    return () => clearInterval(interval);
   }, []);
 
-  if (!mounted) return <div className="pt-24 p-6 text-center font-mono text-slate-500">Loading Node Platform...</div>;
-
-  const jam = new Date().getHours();
-  let ucapan = lang === 'ID' ? "Selamat Malam" : "Good Evening";
-  if (jam < 11) ucapan = lang === 'ID' ? "Selamat Pagi" : "Good Morning";
-  else if (jam < 15) ucapan = lang === 'ID' ? "Selamat Siang" : "Good Afternoon";
-  else if (jam < 19) ucapan = lang === 'ID' ? "Selamat Sore" : "Good Evening";
-
-  // Fungsi Format Angka ke IDR atau USD secara Realtime
-  const formatValue = (valInIDR: number) => {
-    if (currency === 'USD') {
-      const usdVal = valInIDR / exchangeRate;
-      return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 2 }).format(usdVal);
-    }
-    return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(valInIDR);
-  };
-
   return (
-    <div className="pt-24 p-6 font-sans tracking-tight max-w-7xl mx-auto space-y-6">
-      
-      {/* CONTROL SWITCHER PANEL HEADER (IDR/USD & EN/ID) */}
-      <div className="flex justify-end items-center gap-3 bg-slate-900/50 p-2 rounded-xl border border-slate-800 w-max ml-auto">
-        <div className="flex rounded-md overflow-hidden border border-slate-700 bg-slate-950 p-0.5 text-[10px] font-bold font-mono">
-          <button onClick={() => setLang('ID')} className={`px-2 py-1 rounded transition-all ${lang === 'ID' ? 'bg-indigo-600 text-white' : 'text-slate-400'}`}>ID</button>
-          <button onClick={() => setLang('EN')} className={`px-2 py-1 rounded transition-all ${lang === 'EN' ? 'bg-indigo-600 text-white' : 'text-slate-400'}`}>EN</button>
-        </div>
-        <div className="flex rounded-md overflow-hidden border border-slate-700 bg-slate-950 p-0.5 text-[10px] font-bold font-mono">
-          <button onClick={() => setCurrency('IDR')} className={`px-2 py-1 rounded transition-all ${currency === 'IDR' ? 'bg-emerald-600 text-white' : 'text-slate-400'}`}>IDR</button>
-          <button onClick={() => setCurrency('USD')} className={`px-2 py-1 rounded transition-all ${currency === 'USD' ? 'bg-emerald-600 text-white' : 'text-slate-400'}`}>USD</button>
-        </div>
-      </div>
+    <div className="pt-20 p-6 bg-[#02040a] min-h-screen text-slate-300 font-mono tracking-tight max-w-7xl mx-auto space-y-6 select-none">
+      <style dangerouslySetInnerHTML={{__html: `#global-header-greeting, header p, .header-greet { display: none !important; }`}} />
 
-      {/* COMPONENT 3D YANG SUDAH AMAN */}
-      <CyberHero3D />
+      <QuantumWave3D />
 
-      {/* BANNER GREETING */}
-      <div className="p-6 bg-slate-900 border border-slate-800 rounded-xl shadow-md">
-        <h1 className="text-2xl font-black text-white tracking-tighter">
-          {ucapan}, Tegar! 🚀
-        </h1>
-        <p className="text-slate-400 text-xs mt-1 font-medium">
-          {lang === 'ID' 
-            ? 'Metrik arsitektur infrastruktur keuangan digital Anda dipantau penuh.' 
-            : 'Your digital financial infrastructure architecture metrics are fully monitored.'}
-        </p>
-      </div>
-
-      {/* REAL-TIME MARKET CONVERTED CARDS */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div className="bg-slate-950 border border-emerald-500/30 p-5 rounded-xl shadow-md">
-          <p className="text-xs font-bold text-emerald-400 uppercase tracking-wider">{lang === 'ID' ? 'Total Pemasukan' : 'Total Income'}</p>
-          <h3 className="text-2xl font-bold text-white font-mono mt-1 tracking-tighter">+{formatValue(3100000)}</h3>
-          <div className="h-2 mt-4 bg-emerald-500/10 rounded-sm overflow-hidden">
-            <div className="h-full bg-emerald-500 w-[75%]"></div>
+      {/* LIVE INTERACTIVE TRADING CANDLESTICK ENGINE */}
+      <div className="bg-[#090d16] p-6 rounded-xl border border-white/[0.04] shadow-xl space-y-6">
+        <div className="flex flex-col md:flex-row justify-between md:items-center gap-4 border-b border-white/[0.03] pb-4">
+          <div>
+            <div className="flex items-center gap-3">
+              <h2 className="text-sm font-black text-white tracking-widest uppercase">SYS_FLOW_FEED_1H</h2>
+              <span className="text-[11px] font-bold text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2 py-0.5 rounded animate-pulse">● LIVE DATA TICKER</span>
+            </div>
+            <p className="text-[10px] text-slate-500 mt-0.5">Primary Node Core Index Status: Aggressive Ingestion Mode</p>
+          </div>
+          <div className="grid grid-cols-2 md:flex md:gap-6 text-xs">
+            <div><span className="text-slate-500">MAX_THRESHOLD:</span> <span className="text-emerald-400 font-bold">Rp 3,100,000</span></div>
+            <div><span className="text-slate-500">MIN_LIMIT:</span> <span className="text-rose-500 font-bold">Rp 1,200,000</span></div>
           </div>
         </div>
 
-        <div className="bg-slate-950 border border-rose-500/30 p-5 rounded-xl shadow-md">
-          <p className="text-xs font-bold text-rose-400 uppercase tracking-wider">{lang === 'ID' ? 'Total Pengeluaran' : 'Total Outcome'}</p>
-          <h3 className="text-2xl font-bold text-white font-mono mt-1 tracking-tighter">-{formatValue(1200000)}</h3>
-          <div className="h-2 mt-4 bg-rose-500/10 rounded-sm overflow-hidden">
-            <div className="h-full bg-rose-500 w-[40%]"></div>
+        {/* FLUID KANDELSTIK RENDERER */}
+        <div className="h-64 flex items-end justify-around border-b border-l border-white/[0.05] pb-2 pl-2 relative">
+          <div className="absolute inset-0 flex flex-col justify-between pointer-events-none opacity-[0.02]">
+            <div className="w-full border-b border-white"></div>
+            <div className="w-full border-b border-white"></div>
+            <div className="w-full border-b border-white"></div>
+          </div>
+          {chartData.map((cd, idx) => (
+            <div key={idx} className="w-16 h-full flex flex-col justify-end items-center relative group">
+              {/* Wick Line */}
+              <div className={`absolute w-[1px]`} style={{ height: `${cd.h - cd.l}%`, bottom: `${cd.l}%`, backgroundColor: cd.isUp ? '#10b981' : '#f43f5e' }}></div>
+              {/* Candle Body */}
+              <div className={`w-8 rounded-sm z-10 border transition-all duration-500`} style={{ height: `${Math.abs(cd.c - cd.o)}%`, bottom: `${Math.min(cd.c, cd.o)}%`, backgroundColor: cd.isUp ? 'rgba(16,185,129,0.15)' : 'rgba(244,63,94,0.15)', borderColor: cd.isUp ? '#10b981' : '#f43f5e' }}></div>
+              {/* Volume Bar */}
+              <div className="w-6 bg-white/[0.03] group-hover:bg-indigo-500/20 transition-all rounded-t-sm" style={{ height: `${cd.v * 0.2}%` }}></div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* HEAVY DATA SCROLL CONTAINERS */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="bg-[#090d16] p-5 rounded-xl border border-white/[0.04] space-y-4">
+          <h3 className="text-xs font-black text-white uppercase tracking-wider">NETWORK NODE UTILIATION</h3>
+          <div className="space-y-3 text-[11px]">
+            <div>
+              <div className="flex justify-between text-slate-500 mb-1"><span>EDGE PACKET CACHE ENGINE</span><span className="text-white">92.4%</span></div>
+              <div className="w-full bg-[#02040a] h-1 rounded-full overflow-hidden border border-white/[0.05]"><div className="bg-emerald-500 h-full w-[92.4%]"></div></div>
+            </div>
+            <div>
+              <div className="flex justify-between text-slate-500 mb-1"><span>MIO 59MM ENGINE ALLOCATION</span><span className="text-amber-400">45.0%</span></div>
+              <div className="w-full bg-[#02040a] h-1 rounded-full overflow-hidden border border-white/[0.05]"><div className="bg-amber-400 h-full w-[45%]"></div></div>
+            </div>
           </div>
         </div>
 
-        <div className="bg-slate-950 border border-slate-800 p-5 rounded-xl shadow-md">
-          <p className="text-xs font-bold text-slate-400 uppercase tracking-wider">{lang === 'ID' ? 'Sisa Saldo Bersih' : 'Net Portfolio Balance'}</p>
-          <h3 className="text-2xl font-bold text-indigo-400 font-mono mt-1 tracking-tighter">{formatValue(1900000)}</h3>
-          <p className="text-[10px] text-slate-500 mt-3 font-mono">NODE STATUS: LIQUIDITY STABLE</p>
+        <div className="bg-[#090d16] p-5 rounded-xl border border-white/[0.04] lg:col-span-2 space-y-3">
+          <h3 className="text-xs font-black text-white uppercase tracking-wider">LIVE TRANSLATION PACKET SYSTEM LOGS</h3>
+          <div className="space-y-1 h-[110px] overflow-y-auto pr-2 text-[10px] text-slate-500 scrollbar-thin">
+            <p className="p-2 bg-[#02040a] rounded border-l border-emerald-500/50 flex justify-between"><span>[OK] SECURE_INGEST: Memory frame mapped to postgres cluster database.</span><span className="text-slate-700">0.01ms</span></p>
+            <p className="p-2 bg-[#02040a] rounded border-l border-indigo-500/50 flex justify-between"><span>[METRIC] HYDRATION_CHECK: Build status verification cleared. Leak risk 0.00%</span><span className="text-slate-700">0.05ms</span></p>
+            <p className="p-2 bg-[#02040a] rounded border-l border-amber-500/50 flex justify-between"><span>[WARN] PACKET_DEPRECATION: ESLint config module bypassed on Edge runtime environment.</span><span className="text-slate-700">1.22ms</span></p>
+          </div>
         </div>
       </div>
     </div>
