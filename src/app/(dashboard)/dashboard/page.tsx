@@ -63,7 +63,10 @@ export default function DashboardPage() {
         subtitle={t(locale, 'dashboard.subtitle')}
       />
 
-      <Hero3D />
+    <div className="p-8 bg-gradient-to-r from-blue-600 to-indigo-700 text-white rounded-2xl shadow-md mb-6">
+     <h1 className="text-3xl font-bold mb-2">Halo, Selamat Datang di HelloDit 👋</h1>
+     <p className="text-blue-100">Sistem Pencatatan Keuangan Digital & Ledger Transaksi</p>
+  </div>
 
       <motion.div 
         className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6"
